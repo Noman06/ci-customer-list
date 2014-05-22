@@ -18,4 +18,11 @@ class Customer extends CI_Controller {
       $this->customer_model->update_customer();
       echo json_encode(array('success' => true));
    }
+
+   public function get_all()
+   {
+      $result = $this->customer_model->get_all();
+      echo json_encode($result);
+
+   }
 }
