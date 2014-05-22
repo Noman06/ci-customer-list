@@ -1,7 +1,7 @@
 <div class="page-header">
 	<div class="row">
 		<div class="col-lg-6">
-			<h1>PHP Test</h1>
+			<h1>Coding Excersice</h1>
 			<p class="lead">This is an example project to demostrate my skills of HTML, CSS, PHP and JavaScript.</p>
 		</div>
 	</div>
