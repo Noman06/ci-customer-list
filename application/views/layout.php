@@ -2,7 +2,7 @@
 <html>
     <meta charset="utf-8"/>
     <head>
-        <title>PHP Test</title>
+        <title>Coding Exercise - CodeIgniter + AngularJS</title>
 
         <!-- Styles -->
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" />
