@@ -69,23 +69,23 @@ app.controller('prospectsController', ['$scope', '$rootScope', function($scope, 
   }
 
   $scope.selectedToCustomer = function(){
-      var to_convert = 0, converted = 0;
-      $('#loader').show();
-      var selected = _.filter($scope.prospects, function(prospect){
-        return prospect.selected;
+    var to_convert = 0, converted = 0;
+    $('#loader').show();
+    var selected = _.filter($scope.prospects, function(prospect){
+      return prospect.selected;
+    });
+    _.each(selected, function(prospect){
+      prospect.selected = false;
+      $scope.convert(prospect, true, function(){
+        converted++;
+        $('#indicator').css('width', (converted / selected.length * 100) + '%');
+        if(selected.length === converted){
+          $('#loader').hide();
+          $('#indicator').css('width', 0);
+          showSuccess('Selected prospects has been converted to Customers successfully');
+        }
       });
-      _.each(selected, function(prospect){
-        prospect.selected = false;
-        $scope.convert(prospect, true, function(){
-          converted++;
-          $('#indicator').css('width', (converted / selected.length * 100) + '%');
-          if(selected.length === converted){
-            $('#loader').hide();
-            $('#indicator').css('width', 0);
-            showSuccess('Selected prospects has been converted to Customers successfully');
-          }
-        });
-      });
+    });
 
     $scope.selectedAll = false;
   };
@@ -291,6 +291,7 @@ app.controller('customersController', ['$scope', '$rootScope', function($scope, 
         });
       });
     }
+    $scope.selectedAll = false;
   };
 
   $scope.remove = function(item) {
