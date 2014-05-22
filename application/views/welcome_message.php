@@ -21,74 +21,159 @@
 		<!-- Tab content -->
 		<div class="tab-content">
 
+			<div class="alert alert-success" id="success">
+        <button type="button" class="close" onclick="$('#success').hide()">×</button>
+        <span id="success_content"></span>
+      </div>
+
 			<!-- Prospects -->
-			<div class="tab-pane fade active in" id="prospects">
+			<div class="tab-pane fade active in" id="prospects" ng-controller="prospectsController">
+				<div class="input-group">
+          <span class="input-group-addon">
+          	<i class="glyphicon glyphicon-search"></i>
+          </span>
+          <input type="search" class="form-control" ng-model="search">
+        </div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th width="5%">
+								<input type="checkbox" ng-click="selectAll()" ng-checked="selectedAll"/>
+							</th>
+							<th># ID</th>
 							<th>Name</th>
 							<th>State</th>
-							<th>Actions</th>
+							<th width="10%">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>Gilberto Avalos</td>
-							<td>NV</td>
+						<tr ng-repeat="prospect in items() | startFrom:currentPage*pageSize | limitTo:pageSize">
 							<td>
-								<button type="button" class="btn btn-default">Convert to Customer</button>
+								<input type="checkbox" ng-click="selectItem(prospect)" ng-checked="prospect.selected"/>
 							</td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>Gilberto Avalos</td>
-							<td>NV</td>
+							<td>{{ prospect.id }}</td>
+							<td>{{ prospect.name }}</td>
+							<td>{{ prospect.state }}</td>
 							<td>
-								<button type="button" class="btn btn-default">Convert to Customer</button>
-							</td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>Gilberto Avalos</td>
-							<td>NV</td>
-							<td>
-								<button type="button" class="btn btn-default">Convert to Customer</button>
-							</td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>Gilberto Avalos</td>
-							<td>NV</td>
-							<td>
-								<button type="button" class="btn btn-default">Convert to Customer</button>
+								<button type="button" ng-click="convert(prospect)" class="btn btn-default btn-sm">Convert to Customer</button>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+
+				<!-- Pagination -->
+				<ul class="pagination pagination-lg">
+          <li ng-class="{ disabled: !currentPage }">
+          	<a href="javascript:void(0)" ng-click="goBack()">«</a>
+          </li>
+          <li class="disabled">
+          	<a href="javascript:void(0)">Page {{currentPage+1}} of {{ numberOfPages() || 1 }}</a>
+          </li>
+          <li ng-class="{ disabled: (currentPage == numberOfPages()-1) || !numberOfPages() }">
+          	<a href="javascript:void(0)" ng-click="goNext()">»</a>
+          </li>
+        </ul>
 			</div>
 
 			<!-- Customers -->
-			<div class="tab-pane fade" id="customers">
+			<div class="tab-pane fade" id="customers" ng-controller="customersController">
+				<div class="input-group">
+          <span class="input-group-addon">
+          	<i class="glyphicon glyphicon-search"></i>
+          </span>
+          <input type="search" class="form-control" ng-model="search">
+        </div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th width="5%">
+								<input type="checkbox" ng-click="selectAll()"/>
+							</th>
+							<th># ID</th>
 							<th>Name</th>
 							<th>State</th>
-							<th>Actions</th>
+							<th>Type</th>
+							<th width="10%">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>Gilberto Avalos</td>
-							<td>NV</td>
-							<td></td>
+						<tr ng-repeat="customer in items() | startFrom:currentPage*pageSize | limitTo:pageSize">
+							<td>
+								<input type="checkbox" ng-click="selectItem(customer)" ng-checked="customer.selected"/>
+							</td>
+							<td>{{ customer.id }}</td>
+							<td>{{ customer.name }}</td>
+							<td>{{ customer.state }}</td>
+							<td>{{ customer.type }}</td>
+							<td>
+								<Button class="btn btn-default" ng-click="edit(customer)">
+									<i class="glyphicon glyphicon-edit"></i>
+								</Button>
+								<Button class="btn btn-danger" ng-click="remove(customer)">
+									<i class="glyphicon glyphicon-trash"></i>
+								</Button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
+
+				<!-- Pagination -->
+				<ul class="pagination pagination-lg">
+          <li ng-class="{ disabled: !currentPage }">
+          	<a href="javascript:void(0)" ng-click="goBack()">«</a>
+          </li>
+          <li class="disabled">
+          	<a href="javascript:void(0)">Page {{currentPage+1}} of {{ numberOfPages() || 1 }}</a>
+          </li>
+          <li ng-class="{ disabled: (currentPage == numberOfPages()-1) || !numberOfPages() }">
+          	<a href="javascript:void(0)" ng-click="goNext()">»</a>
+          </li>
+        </ul>
+
+        <!-- Modal Form -->
+        <div class="modal" id="modal_form">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				        <h4 class="modal-title" id="form_title"></h4>
+				      </div>
+				      <div class="modal-body">
+				        <div class="form-horizontal">
+								  <fieldset>
+								    <div class="form-group">
+								      <label for="inputEmail" class="col-lg-2 control-label">Name</label>
+								      <div class="col-lg-10">
+								        <input type="text" class="form-control" ng-model="currentCustomer.name" placeholder="Name">
+								      </div>
+								    </div>
+								    <div class="form-group">
+								      <label for="select" class="col-lg-2 control-label">State</label>
+								      <div class="col-lg-10">
+								        <select class="form-control" ng-model="currentCustomer.state" placeholder="Select type">
+								          <option ng-repeat="state in states">{{ state }}</option>
+								        </select>
+								      </div>
+								    </div>
+								    <div class="form-group">
+								      <label for="select" class="col-lg-2 control-label">Type</label>
+								      <div class="col-lg-10">
+								        <select class="form-control" ng-model="currentCustomer.type">
+								          <option ng-repeat="type in types">{{ type }}</option>
+								        </select>
+								      </div>
+								    </div>
+								  </fieldset>
+								</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeModal()">Close</button>
+				        <button type="button" class="btn btn-primary" ng-click="update()">Save changes</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
 			</div>
 
 		</div>

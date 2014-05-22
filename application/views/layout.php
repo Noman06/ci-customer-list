@@ -28,6 +28,7 @@
 
         <!-- Scripts -->
         <script type="text/javascript" src="assets/js/libs/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="assets/js/libs/underscore-min.js"></script>
         <script type="text/javascript" src="assets/js/libs/bootstrap.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular.min.js"></script>
         <script type="text/javascript" src="assets/js/app.js"></script>
