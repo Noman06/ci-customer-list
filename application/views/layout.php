@@ -19,8 +19,7 @@
                 <div class="row">
                   <div class="col-lg-12">
                     <p>Made by <a href="http://github.com/Agnostic">Gilberto Avalos</a> (<a href="mailto:avalosagnostic@gmail.com">avalosagnostic@gmail.com</a>).</p>
-                    <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>.
-
+                    <p>Source code @ <a href="https://github.com/Agnostic/ci-customer-list">https://github.com/Agnostic/ci-customer-list</a>.
                   </div>
                 </div>
             </footer>

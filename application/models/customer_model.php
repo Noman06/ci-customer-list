@@ -20,6 +20,13 @@ class Customer_model extends CI_Model {
 
    public function update_customer()
    {
+      $data = array(
+         'name'  => $this->input->post('name'),
+         'state' => $this->input->post('state'),
+         'type'  => $this->input->post('type')
+     );
+     $this->db->where('id', $this->input->post('id'));
+     return $this->db->update('customers', $data);
 
    }
 
@@ -29,6 +36,12 @@ class Customer_model extends CI_Model {
       $this->db->from('customers');
       $query = $this->db->get();
       return $query->result();
+   }
+
+   public function delete()
+   {
+      $this->db->where('id', $this->input->post('id'));
+      $this->db->delete('customers');
    }
 
 }

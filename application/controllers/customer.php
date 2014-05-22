@@ -10,13 +10,11 @@ class Customer extends CI_Controller {
    public function create()
    {
       $this->customer_model->save_customer();
-      echo json_encode(array('success' => true));
    }
 
    public function update()
    {
       $this->customer_model->update_customer();
-      echo json_encode(array('success' => true));
    }
 
    public function get_all()
@@ -24,5 +22,10 @@ class Customer extends CI_Controller {
       $result = $this->customer_model->get_all();
       echo json_encode($result);
 
+   }
+
+   public function remove()
+   {
+      $this->customer_model->delete();
    }
 }

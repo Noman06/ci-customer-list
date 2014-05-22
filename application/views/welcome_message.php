@@ -21,6 +21,15 @@
 		<!-- Tab content -->
 		<div class="tab-content">
 
+			<div id="loader">
+			  <h4>Applying actions, please wait...</h4>
+			  <div class="bs-component">
+          <div class="progress">
+            <div class="progress-bar" style="width: 0%;" id="indicator"></div>
+          </div>
+        </div>
+			</div>
+
 			<div class="alert alert-success" id="success">
         <button type="button" class="close" onclick="$('#success').hide()">×</button>
         <span id="success_content"></span>
@@ -28,12 +37,20 @@
 
 			<!-- Prospects -->
 			<div class="tab-pane fade active in" id="prospects" ng-controller="prospectsController">
-				<div class="input-group">
-          <span class="input-group-addon">
-          	<i class="glyphicon glyphicon-search"></i>
-          </span>
-          <input type="search" class="form-control" ng-model="search">
-        </div>
+				<div>
+					<div class="input-group" style="width: 79%; float:left;">
+	          <span class="input-group-addon">
+	          	<i class="glyphicon glyphicon-search"></i>
+	          </span>
+	          <input type="search" class="form-control" ng-model="search">
+	        </div>
+	        <div class="input-group" style="width: 20%; float:right">
+	        	<button class="btn btn-default" style="width:100%;" ng-click="selectedToCustomer()">
+	        		<span class="hidden-sm">Selected</span> to Customer
+	        	</button>
+	        </div>
+	        <div class="clearfix"></div>
+	      </div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
@@ -77,17 +94,37 @@
 
 			<!-- Customers -->
 			<div class="tab-pane fade" id="customers" ng-controller="customersController">
-				<div class="input-group">
-          <span class="input-group-addon">
-          	<i class="glyphicon glyphicon-search"></i>
-          </span>
-          <input type="search" class="form-control" ng-model="search">
-        </div>
+				<div>
+					<div class="input-group" style="width:47%; float:left;">
+	          <span class="input-group-addon">
+	          	<i class="glyphicon glyphicon-search"></i>
+	          </span>
+	          <input type="search" class="form-control" ng-model="search">
+	        </div>
+	         <div class="input-group" style="width:20%; float:left;">
+	        	<select class="form-control" ng-model="stateFilter">
+	        		<option value="">All States</option>
+	        		<option value="{{state}}" ng-repeat="state in states">{{ state }}</option>
+	        	</select>
+	        </div>
+	        <div class="input-group" style="width:20%; float:left;">
+	        	<select class="form-control" ng-model="typeFilter">
+	        		<option value="">All Types</option>
+	        		<option value="{{type}}" ng-repeat="type in types">{{ type }}</option>
+	        	</select>
+	        </div>
+	        <div class="input-group" style="width:9%; float:right;">
+	        	<button class="btn btn-danger" ng-click="removeSelected()" ng-disabled="!selectedItems()">
+	        		<i class="glyphicon glyphicon-trash"></i> Remove <span class="hidden-sm">Selected</span>
+	        	</button>
+	        </div>
+	        <div class="clearfix"></div>
+	       </div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
 							<th width="5%">
-								<input type="checkbox" ng-click="selectAll()"/>
+								<input type="checkbox" ng-click="selectAll()" ng-checked="selectedAll"/>
 							</th>
 							<th># ID</th>
 							<th>Name</th>
@@ -141,10 +178,11 @@
 				      <div class="modal-body">
 				        <div class="form-horizontal">
 								  <fieldset>
-								    <div class="form-group">
+								    <div class="form-group" ng-class="{ 'has-success': currentCustomer.name && currentCustomer.name.length >= 3 && currentCustomer.name.length <= 32, 'has-error': currentCustomer.name && currentCustomer.name.length < 3 || currentCustomer.name.length > 32 }">
 								      <label for="inputEmail" class="col-lg-2 control-label">Name</label>
 								      <div class="col-lg-10">
-								        <input type="text" class="form-control" ng-model="currentCustomer.name" placeholder="Name">
+								        <input onkeypress="return alphaOnly(event)" type="text" maxlength="32" class="form-control" ng-model="currentCustomer.name" placeholder="Name">
+								        <p class="text-danger" ng-show="currentCustomer.name && currentCustomer.name.length < 3 || currentCustomer.name.length > 32">Name must contains between 3 and 32 characters.</p>
 								      </div>
 								    </div>
 								    <div class="form-group">
@@ -168,7 +206,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeModal()">Close</button>
-				        <button type="button" class="btn btn-primary" ng-click="update()">Save changes</button>
+				        <button type="button" class="btn btn-primary" ng-click="update()" ng-disabled="!currentCustomer.name || currentCustomer.name.length < 3 || currentCustomer.name.length > 32">Save changes</button>
 				      </div>
 				    </div>
 				  </div>
