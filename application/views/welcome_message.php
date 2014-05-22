@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-lg-6">
 			<h1>Coding Excersice</h1>
-			<p class="lead">This is an example project to demostrate my skills of HTML, CSS, PHP and JavaScript.</p>
+			<p class="lead">This is an example project to demonstrate my skills of HTML, CSS, PHP and JavaScript.</p>
 		</div>
 	</div>
 
